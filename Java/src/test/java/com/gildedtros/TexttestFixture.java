@@ -8,7 +8,7 @@ public class TexttestFixture {
 
         GildedTros app = new GildedTros(items);
 
-        int days = 2;
+        int days = 100;
         if (args.length > 0) {
             days = Integer.parseInt(args[0]) + 1;
         }
@@ -20,7 +20,7 @@ public class TexttestFixture {
                 System.out.println(item);
             }
             System.out.println();
-            app.updateQuality();
+            app.updateQuality(true);
         }
     }
 
@@ -39,5 +39,7 @@ public class TexttestFixture {
                 new Item("Long Methods", 3, 6),
                 new Item("Ugly Variable Names", 3, 6) };
     }
+
+
 
 }

@@ -7,7 +7,11 @@ class GildedTros {
         this.items = items;
     }
 
-    public void updateQuality() {
+    public void updateQuality(boolean newVersion) {
+        if (newVersion){
+            updateQualityRefactored();
+            return;
+        }
         for (int i = 0; i < items.length; i++) {
             if (!items[i].name.equals("Good Wine")
                     && !items[i].name.equals("Backstage passes for Re:Factor")
@@ -61,4 +65,44 @@ class GildedTros {
             }
         }
     }
+
+    public void updateQualityRefactored(){
+        for(Item item : items){
+            if(!item.name.equals("B-DAWG Keychain")){
+                updateSingleItem(item);
+                checkConstraints(item);
+            }
+        }
+    }
+
+    private void updateSingleItem(Item item) {
+        item.sellIn--;
+        int qualityIncrease = item.sellIn<0 ? -2: -1;
+
+        if(item.name.equals("Good Wine")){
+            qualityIncrease *= (-1);
+        }else if(item.name.equals("Backstage passes for Re:Factor") || item.name.equals("Backstage passes for HAXX")){
+            if(item.sellIn>=0){
+                qualityIncrease *= (-1);
+                if (item.sellIn<10)
+                    qualityIncrease++;
+                if (item.sellIn<5)
+                    qualityIncrease++;
+            } else {
+                qualityIncrease = item.quality * (-1);
+            }
+
+        }else if(item.name.equals("Duplicate Code") || item.name.equals("Long Methods")|| item.name.equals("Ugly Variable Names")){
+            qualityIncrease*=2;
+        }
+
+        item.quality+=  qualityIncrease;
+    }
+
+    private void checkConstraints(Item item){
+        item.quality = item.quality<0 ? 0 : item.quality;
+        item.quality = item.quality>50 ? 50: item.quality;
+    }
+
+
 }

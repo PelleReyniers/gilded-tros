@@ -13,16 +13,16 @@ class GildedTrosTest {
     void foo() {
         Item[] items = new Item[] { new Item("foo", 0, 0) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(false);
         assertEquals("foo", app.items[0].name);
     }
 
     @Test
     void defaultItemQDecreaseTest() {
-        Item[] items = new Item[] { new Item("foo", 10, 10) };
+        Item[] items = new Item[] { new Item("Ring of Cleansening Code", 10, 20) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
-        assertEquals(9, app.items[0].quality);
+        app.updateQuality(true);
+        assertEquals(19, app.items[0].quality);
     }
 
     @Test
@@ -30,7 +30,7 @@ class GildedTrosTest {
         int startQ = 10;
         Item[] items = new Item[] { new Item("foo", 0, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertEquals(startQ-2, app.items[0].quality);
     }
 
@@ -38,7 +38,7 @@ class GildedTrosTest {
     void legendaryItemQTest(){
         Item[] items = new Item[] { new Item("B-DAWG Keychain", 0, 80) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertAll(() -> assertEquals(80, app.items[0].quality),
                 () -> assertEquals(0, app.items[0].sellIn));
 
@@ -48,7 +48,7 @@ class GildedTrosTest {
     void legendaryItemQSubZeroTest(){
         Item[] items = new Item[] { new Item("B-DAWG Keychain", -1, 80) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertAll(() -> assertEquals(80, app.items[0].quality),
                 () -> assertEquals(-1, app.items[0].sellIn));
 
@@ -58,7 +58,7 @@ class GildedTrosTest {
         int startQ = 10;
         Item[] items = new Item[] { new Item("Good Wine", 10, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertEquals(startQ+1, app.items[0].quality);
     }
     @Test
@@ -66,7 +66,7 @@ class GildedTrosTest {
         int startQ = 10;
         Item[] items = new Item[] { new Item("Good Wine", 0, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertEquals(startQ+2, app.items[0].quality);
     }
     @Test
@@ -74,7 +74,7 @@ class GildedTrosTest {
         int startQ = 10;
         Item[] items = new Item[] { new Item("Backstage passes for Re:Factor", 15, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertEquals(startQ+1, app.items[0].quality);
     }
 
@@ -83,7 +83,7 @@ class GildedTrosTest {
         int startQ = 10;
         Item[] items = new Item[] { new Item("Backstage passes for Re:Factor", 10, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertEquals(startQ+2, app.items[0].quality);
     }
 
@@ -92,7 +92,7 @@ class GildedTrosTest {
         int startQ = 10;
         Item[] items = new Item[] { new Item("Backstage passes for Re:Factor", 5, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertEquals(startQ+3, app.items[0].quality);
     }
 
@@ -101,7 +101,7 @@ class GildedTrosTest {
         int startQ = 10;
         Item[] items = new Item[] { new Item("Backstage passes for Re:Factor", 0, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertEquals(0, app.items[0].quality);
     }
 
@@ -113,7 +113,7 @@ class GildedTrosTest {
                 new Item("Ugly Variable Names", 10, startQ) };
 
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertAll(() -> assertEquals(startQ-2, app.items[0].quality),
                 () -> assertEquals(startQ-2, app.items[1].quality),
                 () -> assertEquals(startQ-2, app.items[2].quality));
@@ -126,10 +126,45 @@ class GildedTrosTest {
                 new Item("Long Methods", 0, startQ),
                 new Item("Ugly Variable Names", 0, startQ) };
         GildedTros app = new GildedTros(items);
-        app.updateQuality();
+        app.updateQuality(true);
         assertAll(() -> assertEquals(startQ-4, app.items[0].quality),
                 () -> assertEquals(startQ-4, app.items[1].quality),
                 () -> assertEquals(startQ-4, app.items[2].quality));
+    }
+
+    @Test
+    void oldNewCompare(){
+
+        GildedTros appOld = new GildedTros(generatePartialDataSet());
+        GildedTros appNew = new GildedTros(generatePartialDataSet());
+        StringBuilder strOld = new StringBuilder();
+        StringBuilder strNew = new StringBuilder();;
+        int days = 100;
+
+        for (int i = 0; i < days; i++) {
+            for (Item item : appOld.items) {
+                strOld.append(item.toString());
+            }
+            for (Item item : appNew.items) {
+                strNew.append(item.toString());
+            }
+            appOld.updateQuality(false);
+            appNew.updateQuality(true);
+        }
+
+        assertEquals(strOld.toString(),strNew.toString());
+    }
+
+    private Item[] generatePartialDataSet(){
+        return new Item[] {
+                new Item("Ring of Cleansening Code", 10, 20),
+                new Item("Good Wine", 2, 0),
+                new Item("Elixir of the SOLID", 5, 7),
+                new Item("B-DAWG Keychain", 0, 80),
+                new Item("B-DAWG Keychain", -1, 80),
+                new Item("Backstage passes for Re:Factor", 15, 20),
+                new Item("Backstage passes for Re:Factor", 10, 49),
+                new Item("Backstage passes for HAXX", 5, 49)};
     }
 
 
