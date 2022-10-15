@@ -7,11 +7,7 @@ class GildedTros {
         this.items = items;
     }
 
-    public void updateQuality(boolean newVersion) {
-        if (newVersion){
-            updateQualityRefactored();
-            return;
-        }
+    public void updateQualityDeprecated() {
         for (int i = 0; i < items.length; i++) {
             if (!items[i].name.equals("Good Wine")
                     && !items[i].name.equals("Backstage passes for Re:Factor")
@@ -66,7 +62,7 @@ class GildedTros {
         }
     }
 
-    public void updateQualityRefactored(){
+    public void updateQuality(){
         for(Item item : items){
             if(!item.name.equals("B-DAWG Keychain")){
                 updateSingleItem(item);
@@ -91,7 +87,6 @@ class GildedTros {
             } else {
                 qualityIncrease = item.quality * (-1);
             }
-
         }else if(item.name.equals("Duplicate Code") || item.name.equals("Long Methods")|| item.name.equals("Ugly Variable Names")){
             qualityIncrease*=2;
         }
@@ -100,8 +95,8 @@ class GildedTros {
     }
 
     private void checkConstraints(Item item){
-        item.quality = item.quality<0 ? 0 : item.quality;
-        item.quality = item.quality>50 ? 50: item.quality;
+        item.quality = Math.max(item.quality, 0);
+        item.quality = Math.min(item.quality, 50);
     }
 
 
