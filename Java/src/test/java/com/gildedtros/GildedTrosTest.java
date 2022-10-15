@@ -2,8 +2,6 @@ package com.gildedtros;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,10 +17,10 @@ class GildedTrosTest {
 
     @Test
     void defaultItemQDecreaseTest() {
-        Item[] items = new Item[] { new Item("foo", 10, 10) };
+        Item[] items = new Item[] { new Item("Ring of Cleansening Code", 10, 20) };
         GildedTros app = new GildedTros(items);
         app.updateQuality();
-        assertEquals(9, app.items[0].quality);
+        assertEquals(19, app.items[0].quality);
     }
 
     @Test
@@ -132,6 +130,55 @@ class GildedTrosTest {
                 () -> assertEquals(startQ-4, app.items[2].quality));
     }
 
+    @Test
+    void qualitySubZeroTest(){
+        Item[] items = new Item[] { new Item("Duplicate Code", 0, 2) };
+        GildedTros app = new GildedTros(items);
+        app.updateQuality();
+        assertEquals(0, app.items[0].quality);
+    }
 
+    @Test
+    void qualityOver50Test(){
+        Item[] items = new Item[] { new Item("Good Wine", 0, 50) };
+        GildedTros app = new GildedTros(items);
+        app.updateQuality();
+        assertEquals(50, app.items[0].quality);
+    }
+
+    @Test
+    void oldNewCompare(){
+
+        GildedTros appOld = new GildedTros(generatePartialDataSet());
+        GildedTros appNew = new GildedTros(generatePartialDataSet());
+        StringBuilder strOld = new StringBuilder();
+        StringBuilder strNew = new StringBuilder();
+        int days = 100;
+
+        for (int i = 0; i < days; i++) {
+            for (Item item : appOld.items) {
+                strOld.append(item.toString());
+            }
+            for (Item item : appNew.items) {
+                strNew.append(item.toString());
+            }
+            appOld.updateQualityDeprecated();
+            appNew.updateQuality();
+        }
+
+        assertEquals(strOld.toString(),strNew.toString());
+    }
+
+    private Item[] generatePartialDataSet(){
+        return new Item[] {
+                new Item("Ring of Cleansening Code", 10, 20),
+                new Item("Good Wine", 2, 0),
+                new Item("Elixir of the SOLID", 5, 7),
+                new Item("B-DAWG Keychain", 0, 80),
+                new Item("B-DAWG Keychain", -1, 80),
+                new Item("Backstage passes for Re:Factor", 15, 20),
+                new Item("Backstage passes for Re:Factor", 10, 49),
+                new Item("Backstage passes for HAXX", 5, 49)};
+    }
 
 }
