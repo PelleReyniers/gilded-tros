@@ -1,5 +1,7 @@
 package com.gildedtros;
 
+import Item.Item;
+
 public class TexttestFixture {
     public static void main(String[] args) {
         System.out.println("AXXES CODE KATA - GILDED TROS");

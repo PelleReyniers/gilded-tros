@@ -1,5 +1,7 @@
 package com.gildedtros;
 
+import Item.Item;
+
 class GildedTros {
     Item[] items;
 
@@ -100,4 +102,10 @@ class GildedTros {
     }
 
 
+    public void updateQualityNaughty() {
+        for(Item item : items){
+            item.updateQuality();
+            item.checkConstraints();
+        }
+    }
 }

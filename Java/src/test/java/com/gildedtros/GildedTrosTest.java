@@ -1,5 +1,6 @@
 package com.gildedtros;
 
+import Item.Item;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -151,8 +152,10 @@ class GildedTrosTest {
 
         GildedTros appOld = new GildedTros(generatePartialDataSet());
         GildedTros appNew = new GildedTros(generatePartialDataSet());
+        GildedTros appNaughtyNew = new GildedTros(generateNaughtyPartialDataSet());
         StringBuilder strOld = new StringBuilder();
         StringBuilder strNew = new StringBuilder();
+        StringBuilder strNaughtyNew = new StringBuilder();
         int days = 100;
 
         for (int i = 0; i < days; i++) {
@@ -162,11 +165,15 @@ class GildedTrosTest {
             for (Item item : appNew.items) {
                 strNew.append(item.toString());
             }
+            for (Item item : appNaughtyNew.items) {
+                strNaughtyNew.append(item.toString());
+            }
             appOld.updateQualityDeprecated();
             appNew.updateQuality();
+            appNaughtyNew.updateQualityNaughty();
         }
-
-        assertEquals(strOld.toString(),strNew.toString());
+        assertAll(() -> assertEquals(strOld.toString(),strNew.toString()),
+                () ->assertEquals(strOld.toString(),strNaughtyNew.toString()));
     }
 
     private Item[] generatePartialDataSet(){
@@ -179,6 +186,18 @@ class GildedTrosTest {
                 new Item("Backstage passes for Re:Factor", 15, 20),
                 new Item("Backstage passes for Re:Factor", 10, 49),
                 new Item("Backstage passes for HAXX", 5, 49)};
+    }
+
+    private Item[] generateNaughtyPartialDataSet(){
+        return new Item[] {
+                ItemFactory.createItem("Ring of Cleansening Code", 10, 20),
+                ItemFactory.createItem("Good Wine", 2, 0),
+                ItemFactory.createItem("Elixir of the SOLID", 5, 7),
+                ItemFactory.createItem("B-DAWG Keychain", 0, 80),
+                ItemFactory.createItem("B-DAWG Keychain", -1, 80),
+                ItemFactory.createItem("Backstage passes for Re:Factor", 15, 20),
+                ItemFactory.createItem("Backstage passes for Re:Factor", 10, 49),
+                ItemFactory.createItem("Backstage passes for HAXX", 5, 49)};
     }
 
 }

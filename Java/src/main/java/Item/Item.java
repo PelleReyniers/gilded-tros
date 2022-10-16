@@ -1,4 +1,4 @@
-package com.gildedtros;
+package Item;
 
 public class Item {
 
@@ -14,8 +14,23 @@ public class Item {
         this.quality = quality;
     }
 
-   @Override
-   public String toString() {
+    @Override
+    public String toString() {
         return this.name + ", " + this.sellIn + ", " + this.quality;
     }
+
+    public void updateQuality() {
+        sellIn--;
+        quality--;
+
+        if(sellIn<0)
+            quality--;
+    }
+
+    public void checkConstraints(){
+        quality = Math.max(quality, 0);
+        quality = Math.min(quality, 50);
+    }
+
+
 }
